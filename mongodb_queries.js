@@ -162,3 +162,56 @@ db.posts.find(
         }
     }
 )
+
+// cria indice na collection, para buscar documents pelo campo title
+// db.collection.createIndex(keys, options)
+db.posts.createIndex(
+    {
+        title: 'text'
+    }
+)
+
+// faz busca usando indice $text
+db.posts.find({
+    $text: { // filtro
+        $search: "\"Post O\""
+        // acima, string passada como parametro de busca (eh uma letra "o", nao um zero); retorna Post One
+    }
+})
+
+// faz busca usando indice $text
+db.posts.find({
+    $text: { // filtro
+        $search: "\"Post T\""
+        // acima, string passada como parametro de busca; retorna Post Two, Post Three; sem ordem definida
+    }
+}).pretty()
+
+// atualiza document e adiciona numero de views
+db.posts.update(
+    {
+        title: 'Post Two'
+    },
+    {
+    $set: {
+        views: 10
+    }
+})
+
+// retorna document com views maior que 6
+db.posts.find(
+    {
+        views: {
+            $gt:6 // retorna Post Two
+        }
+    }
+)
+
+// retorna document com views maior ou igual a 6
+db.posts.find(
+    {
+        views: {
+            $gte:6 // retorna Post Two, Post One
+        }
+    }
+)
